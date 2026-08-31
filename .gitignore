@@ -1,0 +1,14 @@
+node_modules/
+.DS_Store
+.idea/
+dist/
+.env
+postgres-data/
+docs-tdd/
+output-tdd/
+work/
+.media/
+.next/
+.turbo/
+*.tsbuildinfo
+pnpm-debug.log*

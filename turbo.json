@@ -1,0 +1,40 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "env": ["SERVER_INTERNAL_URL", "API_INTERNAL_URL"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "dev": {
+      "cache": false,
+      "passThroughEnv": [
+        "SERVER_INTERNAL_URL",
+        "API_INTERNAL_URL",
+        "PORT",
+        "DATABASE_URL",
+        "REDIS_URL",
+        "QDRANT_URL",
+        "MEDIA_DIR",
+        "ADMIN_URL",
+        "SUPPORT_URL",
+        "PUBLIC_URL",
+        "APP_ENCRYPTION_KEY",
+        "MOCK_MODE",
+        "OPENAI_API_KEY",
+        "OPENAI_BASE_URL",
+        "LLM_MODEL"
+      ],
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    }
+  }
+}

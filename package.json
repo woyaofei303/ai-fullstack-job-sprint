@@ -1,0 +1,38 @@
+{
+  "name": "supportly",
+  "private": true,
+  "packageManager": "pnpm@10.34.5",
+  "scripts": {
+    "local:check-user": "test \"$(id -u)\" -ne 0 || (echo '错误：不要使用 sudo/root 运行本地项目命令。' >&2; exit 1)",
+    "local:up": "docker compose up -d --wait postgres redis qdrant",
+    "local:down": "docker compose stop postgres redis qdrant",
+    "local:start": "pnpm local:up && pnpm db:migrate && pnpm dev",
+    "dev": "pnpm local:check-user && set -a && . ./.env && set +a && turbo run dev",
+    "dev:server": "pnpm local:check-user && set -a && . ./.env && set +a && pnpm --filter @supportly/server dev",
+    "dev:admin": "pnpm local:check-user && set -a && . ./.env && set +a && pnpm --filter @supportly/admin dev",
+    "dev:support": "pnpm local:check-user && set -a && . ./.env && set +a && pnpm --filter @supportly/support dev",
+    "db:check": "pnpm local:check-user && set -a && . ./.env && set +a && pg_isready -d \"$DATABASE_URL\" && redis-cli -u \"$REDIS_URL\" ping",
+    "db:migrate": "pnpm local:check-user && set -a && . ./.env && set +a && pnpm --filter @supportly/server migrate",
+    "admin:create": "pnpm local:check-user && set -a && . ./.env && set +a && pnpm --filter @supportly/server admin:create --",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "biome check --write . && prettier --write \"**/*.{md,yaml,yml}\"",
+    "format:check": "biome ci . && prettier --check \"**/*.{md,yaml,yml}\"",
+    "check": "pnpm format:check && turbo run lint typecheck test",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.9",
+    "husky": "9.1.7",
+    "lint-staged": "17.3.0",
+    "prettier": "3.9.6",
+    "turbo": "2.10.11"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "biome check --write --no-errors-on-unmatched",
+    "*.{json,jsonc,css}": "biome check --write --no-errors-on-unmatched",
+    "*.{md,mdx,yaml,yml}": "prettier --write"
+  }
+}
